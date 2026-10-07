@@ -1,6 +1,6 @@
-# Jev Hands-on: ทดลองกับตัวอย่างเคส NeoWork
+# Hands-on 3: Jev สำหรับตัวอย่างเคส NeoWork
 
-คู่มือสำหรับทดลอง Jev บน TypeSafe Playground ด้วย JSON ที่แยก **State** (ข้อมูลเคส) กับ **Questions** (สิ่งที่ต้องการให้ประเมิน) ชัดเจน
+แบบฝึกหัดคัดลอก JSON เคสจำลองลง TypeSafe Playground แล้วทดลองรัน
 
 - ครบ 3 Modes: **Noul, Choice, Score**
 - Mode ละ 2 ตัวอย่าง: ข้อแรกเป็น Single State + Single Question; ข้อสองเป็น Multi Questions บน State เดียว
@@ -15,7 +15,7 @@
 4. วาง JSON ในส่วน **QUESTIONS** ลงในช่อง Questions / Prompts
 5. กด Run / Evaluate แล้วดูคำตอบตาม ID ของแต่ละ question
 
-State คือข้อมูลที่ให้โมเดลประเมิน; คำถามทั้งหมดใน request ใช้ State เดียวกันและถูกประเมินแยกจากกัน, ดังนั้นควรเก็บข้อมูลใน State และ judgment ที่ต้องการใน Questions คนละส่วน [1]
+วาง State และ Questions ในช่องตามป้ายกำกับ; ในตัวอย่าง Multi ให้เพิ่มแต่ละ question ด้วย ID ที่แสดงใน JSON [1]
 
 > หาก Playground แสดงช่องให้เพิ่ม Questions ทีละข้อ ให้เพิ่มแต่ละ object โดยใช้ชื่อ ID เป็น question ID หากหน้าจอมีช่องแยก `type`, `instructions`, `criteria` ให้ใส่ค่าแต่ละ field ให้ตรงช่อง
 
@@ -32,8 +32,6 @@ State คือข้อมูลที่ให้โมเดลประเ�
 ---
 
 # Mode 1 — Noul
-
-Noul ตอบคำถาม yes/no โดยคืนค่าความน่าจะเป็นของ “ใช่” การแยกหลายเงื่อนไขเป็นหลายคำถามช่วยให้แต่ละผลลัพธ์มีความหมายชัดเจน [2]
 
 ## Noul 1 — Single: ระบุว่ามีการรายงานเหตุซ้ำหรือไม่?
 
@@ -107,8 +105,6 @@ Noul ตอบคำถาม yes/no โดยคืนค่าความน�
 ---
 
 # Mode 2 — Choice
-
-Choice ใช้เมื่อต้องเลือกหนึ่งคำตอบจากตัวเลือกที่กำหนดไว้ และส่งคืนตัวเลือกพร้อม probability distribution และ confidence [3]
 
 ## Choice 1 — Single: จัดประเภทเคสจากคำอธิบาย
 
@@ -216,8 +212,6 @@ Choice ใช้เมื่อต้องเลือกหนึ่งคำ�
 ---
 
 # Mode 3 — Score
-
-Score ใช้ระดับที่เรียงลำดับจากต่ำไปสูง โดย `criteria` เป็นรายการระดับพร้อมคำอธิบาย คะแนนอาจอยู่ระหว่างระดับ จึงควรอ่าน `probabilities`, `legend` และ `confidence` ประกอบ [4]
 
 ## Score 1 — Single: ประเมินความพร้อมของข้อมูลสำหรับ RCA review
 

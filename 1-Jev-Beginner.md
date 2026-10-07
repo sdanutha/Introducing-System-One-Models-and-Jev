@@ -1,13 +1,8 @@
-# Jev Hands-on สำหรับมือใหม่: 3 Modes × 2 ตัวอย่าง
+# Hands-on 1: Jev สำหรับมือใหม่ — 3 Modes × 2 ตัวอย่าง
 
-ลองใช้ Jev บน TypeSafe Playground ด้วย JSON สั้น ๆ แยก **State** (ข้อมูล) กับ **Questions** (สิ่งที่ถาม) ให้ชัด
+แบบฝึกหัดผ่าน TypeSafe Playground จำนวน 6 ตัวอย่าง ครอบคลุม Noul, Choice และ Score [1]
 
-- มี 3 Modes: **Noul, Choice, Score**
-- Mode ละ 2 ตัวอย่าง: ข้อ 1 ใช้ State เดียว + Question เดียว; ข้อ 2 ใช้ State เดียว + หลาย Questions
-- เรียงจากง่ายไปยากขึ้น
-- ใช้ Playground ได้โดยไม่ต้องเขียนโค้ด [1]
-
-> ชื่อที่ถูกต้องคือ Jev (โมเดล) และ Noul (primitive) ตัวอย่างเป็นข้อมูลฝึกทั่วไป ไม่ใช่ข้อมูล production
+> ใช้ข้อมูลสาธิตเท่านั้น ไม่ใช่ข้อมูล production
 
 ## วิธีใช้ Playground
 
@@ -17,25 +12,13 @@
 4. คัดลอก JSON ในกรอบ **QUESTIONS** ไปวางในช่อง Questions / Prompts
 5. กด Run / Evaluate แล้วดูผลลัพธ์
 
-State คือข้อมูลที่โมเดลประเมิน ส่วน Questions คือคำถามที่ต้องการให้ตอบ สามารถถามหลายข้อกับ State เดียวกันในคำขอเดียวได้ [1][2][3]
+ในแต่ละแบบฝึกหัด ให้วาง State และ Questions แยกช่องตามป้ายกำกับ [1][2]
 
 > หาก Playground แสดงช่องแยก ให้คัดลอกแต่ละบล็อกลงช่องตามชื่อ หากเป็น request editor ให้ใส่ object ของ State ใน `state` และ object ของ Questions ใน `questions` อย่าวาง Questions เป็นส่วนหนึ่งของ State
-
-## สรุป 3 Modes
-
-| Mode | ใช้เมื่อ | ฟิลด์คำตอบหลัก |
-|---|---|---|
-| **Noul** | ถามใช่/ไม่ใช่ | `noul`: ความน่าจะเป็นของ “ใช่” ตั้งแต่ 0–1 |
-| **Choice** | เลือกหนึ่งข้อจากรายการ | `choice`, `probabilities`, `confidence` |
-| **Score** | ให้คะแนนตามระดับที่เรียงลำดับ | `score`, `legend`, `probabilities`, `confidence` |
-
-เลือก mode ตามคำตอบที่โค้ดหรือผู้ใช้ต้องการ: Noul สำหรับ yes/no, Choice สำหรับตัวเลือกที่ไม่มีลำดับ และ Score สำหรับ rubric แบบไล่ระดับ [2][3][4][5]
 
 ---
 
 # Mode 1 — Noul
-
-Noul คืนความน่าจะเป็นว่า “ใช่” สำหรับคำถาม yes/no และไม่มี `confidence` แยก [3]
 
 ## Noul 1 — Single: ข้อความพูดถึงแมวไหม?
 
@@ -101,8 +84,6 @@ Noul คืนความน่าจะเป็นว่า “ใช่” �
 ---
 
 # Mode 2 — Choice
-
-Choice เลือกหนึ่งตัวเลือกจากรายการที่กำหนด และคืน probabilities กับ confidence ประกอบ [4]
 
 ## Choice 1 — Single: ท้องฟ้าเป็นสีอะไรตามข้อความ?
 
@@ -187,8 +168,6 @@ Choice เลือกหนึ่งตัวเลือกจากราย�
 ---
 
 # Mode 3 — Score
-
-Score ใช้ระดับคะแนนที่เรียงลำดับกัน ต้องอธิบายความหมายของแต่ละระดับให้ชัดเจน [5]
 
 ## Score 1 — Single: กาแฟร้อนแค่ไหน?
 

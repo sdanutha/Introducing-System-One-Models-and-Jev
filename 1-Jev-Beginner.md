@@ -1,30 +1,18 @@
-# Hands-on 1: Jev สำหรับมือใหม่ — 3 Modes × 2 ตัวอย่าง
+# Hands-on 1: Jev for Beginners
 
-แบบฝึกหัดผ่าน TypeSafe Playground จำนวน 6 ตัวอย่าง ครอบคลุม Noul, Choice และ Score [1]
+Try six short examples in the [TypeSafe Playground](https://console.typesafe.ai/). Each mode has one Single and one Multi example.
 
-> ใช้ข้อมูลสาธิตเท่านั้น ไม่ใช่ข้อมูล production
-
-## วิธีใช้ Playground
-
-1. เปิด [TypeSafe Playground](https://console.typesafe.ai/)
-2. เลือกตัวอย่างด้านล่าง
-3. คัดลอก JSON ในกรอบ **STATE** ไปวางในช่อง State
-4. คัดลอก JSON ในกรอบ **QUESTIONS** ไปวางในช่อง Questions / Prompts
-5. กด Run / Evaluate แล้วดูผลลัพธ์
-
-ในแต่ละแบบฝึกหัด ให้วาง State และ Questions แยกช่องตามป้ายกำกับ [1][2]
-
-> หาก Playground แสดงช่องแยก ให้คัดลอกแต่ละบล็อกลงช่องตามชื่อ หากเป็น request editor ให้ใส่ object ของ State ใน `state` และ object ของ Questions ใน `questions` อย่าวาง Questions เป็นส่วนหนึ่งของ State
+1. Paste each **STATE** block into State.
+2. Paste each **QUESTIONS** block into Questions / Prompts.
+3. Select Run / Evaluate. Answers appear under each question ID.
 
 ---
 
 # Mode 1 — Noul
 
-## Noul 1 — Single: ข้อความพูดถึงแมวไหม?
+## Noul 1 — Single: Does the text mention a cat?
 
-หนึ่ง State กับหนึ่ง Question
-
-### STATE — วางในช่อง State
+### STATE
 
 ```json
 {
@@ -32,7 +20,7 @@
 }
 ```
 
-### QUESTIONS — วางในช่อง Questions
+### QUESTIONS
 
 ```json
 {
@@ -43,11 +31,9 @@
 }
 ```
 
-**ดูผล:** `answers.mentions_cat.noul` ค่าใกล้ 1 หมายถึงมีแนวโน้มว่าใช่ ค่าใกล้ 0 หมายถึงมีแนวโน้มว่าไม่ใช่
+**Result:** Check `answers.mentions_cat.noul`. Near 1 means Yes is more likely; near 0 means No.
 
-## Noul 2 — Multi: ตรวจข้อความและนโยบายใน State เดียว
-
-หนึ่ง State กับหลาย Questions โดยแต่ละ Question ตรวจคนละข้อมูล
+## Noul 2 — Multi: Check a message and policy
 
 ### STATE
 
@@ -79,15 +65,13 @@
 }
 ```
 
-**ดูผล:** มีคำตอบแยกตาม ID ทั้งสามข้อ ใช้ State เดียวกัน แต่ทุก Question เป็น judgment แยกอิสระ [2] สังเกตว่าถามถึง “ลูกค้าขอ refund” ต่างจาก “policy พูดถึง refund”
+**Result:** Check each question ID. They test separate facts in the same State.
 
 ---
 
 # Mode 2 — Choice
 
-## Choice 1 — Single: ท้องฟ้าเป็นสีอะไรตามข้อความ?
-
-หนึ่ง State กับหนึ่ง Question
+## Choice 1 — Single: What color is the sky?
 
 ### STATE
 
@@ -113,11 +97,9 @@
 }
 ```
 
-**ดูผล:** `answers.sky_color.choice` คือ option ที่เลือก; ดู `probabilities` และ `confidence` เพื่อเห็นความกระจาย/ความชัดของคำตอบ [4]
+**Result:** Check `answers.sky_color.choice`, `probabilities`, and `confidence`.
 
-## Choice 2 — Multi: จำแนกปัญหาและสิ่งที่ลูกค้าต้องการ
-
-หนึ่ง State กับหลาย Questions แบบ Choice
+## Choice 2 — Multi: Classify a customer message
 
 ### STATE
 
@@ -163,15 +145,13 @@
 }
 ```
 
-**ดูผล:** เปรียบเทียบ `issue_type.choice`, `requested_resolution.choice` และ `tone.choice` ว่าแต่ละ Question คืนคนละการจัดประเภท แม้ใช้ State เดียวกัน ตัวเลือก `other` ช่วยรองรับกรณีที่ไม่เข้ากลุ่มที่ระบุ [2][4]
+**Result:** Compare `issue_type`, `requested_resolution`, and `tone` answers.
 
 ---
 
 # Mode 3 — Score
 
-## Score 1 — Single: กาแฟร้อนแค่ไหน?
-
-หนึ่ง State กับหนึ่ง Question
+## Score 1 — Single: How hot is the coffee?
 
 ### STATE
 
@@ -197,11 +177,9 @@
 }
 ```
 
-**ดูผล:** ตรวจ `answers.temperature.score`, `legend`, `probabilities` และ `confidence` ไม่ต้องคาดหวังว่า score จะเป็นจำนวนเต็มเสมอ [5]
+**Result:** Check `answers.temperature.score` and the related `legend`, `probabilities`, and `confidence`.
 
-## Score 2 — Multi: ให้คะแนนรายงานบั๊กสองด้าน
-
-หนึ่ง State กับหลาย Questions แบบ Score แต่ละข้อใช้ rubric ของตัวเอง
+## Score 2 — Multi: Score a bug report
 
 ### STATE
 
@@ -245,38 +223,10 @@
 }
 ```
 
-**ดูผล:** เปรียบเทียบคะแนนด้านรายละเอียด, ความพร้อมในการทำซ้ำ และ impact แยกกัน `score` สรุปตำแหน่งบน rubric; `probabilities` แสดงการกระจายตามระดับ และ `confidence` สรุป distribution [5] อย่าตีความคะแนนนี้ว่าเป็นข้อเท็จจริงที่ยืนยันแล้ว
+**Result:** Compare the scores for detail, reproduction readiness, and impact. A score is not a confirmed fact.
 
 ---
 
-## แบบฝึกสั้น ๆ
+## Try it yourself
 
-สำหรับแต่ละตัวอย่าง Multi ให้แก้เฉพาะข้อความใน State แล้วรัน Questions ชุดเดิมอีกครั้ง:
-
-- **Noul:** เปลี่ยนข้อความลูกค้าเป็น “Can you explain the return policy?” แล้วดูว่า `customer_requested_refund` เปลี่ยนอย่างไร
-- **Choice:** เปลี่ยนข้อความเป็น “My package has not arrived. Please refund the shipping fee.” แล้วดูว่าคำตอบสองข้อเปลี่ยนอย่างไร
-- **Score:** เพิ่มขั้นตอนทำซ้ำที่ชัดเจนใน bug report แล้วเปรียบเทียบ `reproduction_readiness`
-
-## เช็กลิสต์
-
-- [ ] บท Single แต่ละบทมี State หนึ่งชุดและ Question หนึ่งข้อ
-- [ ] บท Multi แต่ละบทมี State หนึ่งชุดและ Questions หลายข้อ
-- [ ] Noul คืนค่า yes probability; Choice เลือกจาก options; Score ประเมินตามระดับ
-- [ ] อ่าน probabilities/confidence ประกอบตามชนิดคำตอบ
-- [ ] จดผลที่ Playground แสดงจริง เพราะผลอาจแตกต่างตามอินพุตและการประเมิน [1]
-
-## เอกสารทางการ
-
-- [1] [TypeSafe Quick start](https://docs.typesafe.ai/introduction/quickstart)
-- [2] [Primitives (Questions)](https://docs.typesafe.ai/primitives.md)
-- [3] [Noul](https://docs.typesafe.ai/primitives/noul.md)
-- [4] [Choice](https://docs.typesafe.ai/primitives/choice.md)
-- [5] [Score](https://docs.typesafe.ai/primitives/score.md)
-
-## Sources
-
-[1] https://docs.typesafe.ai/introduction/quickstart — Quick start
-[2] https://docs.typesafe.ai/primitives.md — Primitives
-[3] https://docs.typesafe.ai/primitives/noul.md — Noul
-[4] https://docs.typesafe.ai/primitives/choice.md — Choice
-[5] https://docs.typesafe.ai/primitives/score.md — Score
+Change one State at a time and run its Questions again: ask about a refund, change the customer issue, or add clear bug reproduction steps.

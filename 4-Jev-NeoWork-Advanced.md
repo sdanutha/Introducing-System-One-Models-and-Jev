@@ -1,22 +1,16 @@
-# Hands-on 4: Advanced NeoWork Triage — ผสม 3 Modes
+# Hands-on 4: Advanced NeoWork
 
-รันเคสตัวอย่าง NeoWork ด้วย **State 1 ชุด** และ **Questions 1 ชุด** ซึ่งผสม Noul, Choice และ Score ใน request เดียว [1][2]
+Run one sample case with one State and one Questions set. Questions use Noul, Choice, and Score together.
 
-- ใช้ข้อมูลจำลองเพื่อการเรียนรู้เท่านั้น ไม่ใช่ข้อมูลจาก NeoWork, Oracle, Hive หรือโรงงานจริง
-- Questions ทุกข้อเห็น State ชุดเดียวกันและประเมินแยกจากกัน [1][2] ให้ระบบ application เป็นผู้รวมผลและกำหนด workflow ต่อ
-- ห้ามใช้ผลจากแบบฝึกหัดนี้ปล่อย hold, อนุมัติ release, ปิดเคส หรือสั่งการ production โดยอัตโนมัติ
+This is fictional training data, not real NeoWork or factory data. Never use these results to release a hold, approve a release, close a case, or control production.
 
-## วิธีรันบน Playground
+## How to use the Playground
 
-1. เปิด [TypeSafe Playground](https://console.typesafe.ai/)
-2. สร้าง request ใหม่ โดยใช้ JSON ในส่วน **STATE** เป็น State
-3. เพิ่ม Questions จาก JSON ในส่วน **QUESTIONS**; ถ้า Playground ให้เพิ่มทีละข้อ ให้สร้างหนึ่ง question ต่อหนึ่ง key/ID ตามตัวอย่าง
-4. เลือก Jev หาก Playground มีตัวเลือกโมเดล แล้วกด Run / Evaluate
-5. อ่านผลตามหัวข้อ “วิธีอ่านคำตอบ” ด้านล่าง
+1. Open the [TypeSafe Playground](https://console.typesafe.ai/).
+2. Paste **STATE** into State and **QUESTIONS** into Questions / Prompts. If the Playground asks for one question at a time, add each question by its ID.
+3. Select Run / Evaluate. Find each answer by its question ID.
 
-ใน API รูปแบบคำขอประกอบด้วย `state`, `model` และ map ของ `questions`; question IDs จะเป็น key ของคำตอบที่ส่งกลับ [2] ในแบบฝึกหัดนี้มี State block เดียวและ Questions block เดียวเท่านั้น
-
-## STATE — คัดลอกทั้งก้อนลงช่อง State
+## STATE
 
 ```json
 {
@@ -81,11 +75,7 @@
 }
 ```
 
-## QUESTIONS — คัดลอกทั้งก้อนลงช่อง Questions
-
-คำถามแต่ละข้อมี ID ของตัวเอง เพื่อให้ผลลัพธ์อ่านแยกกันได้ [2]
-
-Noul ใช้กับคำถาม yes/no เพียงประเด็นเดียว [3] Choice ใช้ตัวเลือกพร้อมคำอธิบาย [4] Score ใช้ criteria ที่เรียงจากระดับต่ำไปสูง [5]
+## QUESTIONS
 
 ```json
 {
@@ -179,53 +169,14 @@ Noul ใช้กับคำถาม yes/no เพียงประเด็�
 }
 ```
 
-## วิธีอ่านคำตอบ
+## Read the results
 
-คำตอบจะกลับมาใต้ ID ที่กำหนดไว้ใน Questions [2]:
+- **Choice:** Check `choice`, `probabilities`, and `confidence` for case type, severity, review stage, and evidence gap.
+- **Noul:** Check `noul` (0–1) for the yes/no questions.
+- **Score:** Check `score`, `legend`, `probabilities`, and `confidence` for evidence readiness.
 
-| Question IDs | Mode | ฟิลด์หลักที่อ่าน | ใช้ตอบเรื่อง |
-|---|---|---|---|
-| `case_type`, `triage_severity`, `next_review_stage`, `primary_evidence_gap` | Choice | `choice`, `probabilities`, `confidence` | ประเภทเคส, ความรุนแรง, ขั้น review, ช่องว่างหลักฐาน |
-| `event_repeated_within_24h`, `root_cause_confirmed`, `release_approval_provided` | Noul | `noul` (0–1) | ความน่าจะเป็นที่คำตอบ yes เป็นจริง; Noul ไม่มี confidence แยก |
-| `rca_evidence_readiness`, `impact_documentation` | Score | `score`, `legend`, `probabilities`, `confidence` | ตำแหน่งบน rubric; คะแนนอาจอยู่ระหว่างระดับ |
+Questions are evaluated separately using the same State. Compare the answers, but do not treat them as proof, approval, or commands. Application code and qualified people must control real actions.
 
-Choice แสดงตัวเลือกที่มี probability สูงสุดพร้อม distribution ของทุกตัวเลือก [4] ส่วน Score เป็นตำแหน่งบนลำดับระดับและอาจเป็นทศนิยม จึงควรอ่าน probabilities ควบคู่กัน ไม่พิจารณาจาก score ตัวเดียว [5] ค่าเหล่านี้เป็นการประเมินจากข้อมูลที่ให้ ไม่ใช่หลักฐานยืนยันหรือการอนุมัติ
+## Try it yourself
 
-## วิเคราะห์ผลแบบ Advanced
-
-1. เปรียบเทียบ `case_type` กับ `primary_evidence_gap`: ประเภทเคสตอบว่าเป็นงานกลุ่มใด ส่วน evidence gap บอกข้อมูลสำคัญที่ยังขาด [4]
-2. เปรียบเทียบ `triage_severity` กับ `impact_documentation`: การมีหลายล็อตบน hold ไม่เท่ากับมีหลักฐานยืนยันผลกระทบด้าน production/customer/shipping
-3. เทียบ `event_repeated_within_24h` กับ `root_cause_confirmed`: การเกิดซ้ำเป็นข้อมูลเกี่ยวกับ pattern แต่ไม่ได้ยืนยันสาเหตุ
-4. อ่าน `rca_evidence_readiness.score` พร้อม probabilities และ confidence; คะแนน readiness ไม่ใช่ probability ว่า RCA ถูกต้อง [5]
-5. ตรวจว่าคำตอบแต่ละข้ออ้างอิง State ได้หรือไม่ [1] หาก State ไม่มีข้อมูลนั้นให้ถือเป็นช่องว่างเพื่อ human review ไม่ใช่เติมข้อเท็จจริงเอง
-
-คำถามหลายข้อใน request เดียวกันถูกประเมินแยกกัน แม้จะใช้ State เดียวกัน; อย่าคาดหวังให้คำตอบหนึ่ง question คำนวณหรือบังคับคำตอบอีก question โดยอัตโนมัติ [1][2] การรวมผลควรทำใน application code [6] การตั้ง threshold และควบคุม side effects ต้องกำหนดตามความเสี่ยงของ workflow [6]
-
-## ทดลองเปลี่ยน State
-
-เก็บ Questions เดิมไว้ แล้วเปลี่ยนข้อมูล State ทีละจุด:
-
-- **Scenario A — ไม่มีข้อความว่าเกิดซ้ำ:** แก้ `case.description` ให้ไม่ระบุ event ซ้ำภายใน 24 ชั่วโมง แล้วสังเกต `event_repeated_within_24h`
-- **Scenario B — เพิ่ม impact assessment จำลอง:** เพิ่มหลักฐานที่ระบุ scope และผลกระทบอย่างชัดเจนใน `evidence.production_or_customer_impact` แล้วสังเกต `triage_severity` และ `impact_documentation`
-- **Scenario C — เพิ่มหลักฐาน RCA จำลอง:** เพิ่ม engineer assessment, root-cause verification และ containment verification ที่ระบุว่าเป็นข้อมูลฝึก แล้วสังเกต `root_cause_confirmed`, `primary_evidence_gap` และ `rca_evidence_readiness`
-
-ใช้ข้อมูลสังเคราะห์เท่านั้น และอย่าเขียน Scenario ที่ทำให้ดูเหมือนมี approval จริง ผลลัพธ์อาจเปลี่ยนตามข้อความที่ป้อนและไม่ใช่ค่าที่รับประกัน; ควรทดสอบเกณฑ์กับข้อมูล use case ก่อนกำหนด workflow จริง [6]
-
-## Checklist
-
-- [ ] มี JSON State เพียงหนึ่ง block และ Questions เพียงหนึ่ง block
-- [ ] Questions ผสม Noul, Choice และ Score ใน request เดียว
-- [ ] ทุกคำตอบตรวจได้จาก question ID โดยตรง
-- [ ] แต่ละ Noul ถามเงื่อนไข yes/no เดียว
-- [ ] Choice มีตัวเลือกที่อธิบายความหมาย รวมตัวเลือก fallback
-- [ ] Score มี levels เรียงลำดับและเป็น rubric มิติเดียว
-- [ ] ไม่มีการนำผลไปเปลี่ยนสถานะ production โดยอัตโนมัติ
-
-## Sources
-
-[1] https://docs.typesafe.ai/concepts/state — State
-[2] https://docs.typesafe.ai/primitives — Primitives
-[3] https://docs.typesafe.ai/primitives/noul — Noul
-[4] https://docs.typesafe.ai/primitives/choice — Choice
-[5] https://docs.typesafe.ai/primitives/score — Score
-[6] https://docs.typesafe.ai/concepts/how-to-build-with-system-one — How to build with TypeSafe
+Keep Questions unchanged. Change one part of the State at a time: remove the repeat-event note, add fictional impact details, or add fictional RCA evidence. Run again and compare the related answer IDs.

@@ -1,41 +1,16 @@
-# Hands-on 3: Jev สำหรับตัวอย่างเคส NeoWork
+# Hands-on 3: Sample NeoWork
 
-แบบฝึกหัดคัดลอก JSON เคสจำลองลง TypeSafe Playground แล้วทดลองรัน
+Try six short examples in the [TypeSafe Playground](https://console.typesafe.ai/). Each mode has one Single and one Multi example.
 
-- ครบ 3 Modes: **Noul, Choice, Score**
-- Mode ละ 2 ตัวอย่าง: ข้อแรกเป็น Single State + Single Question; ข้อสองเป็น Multi Questions บน State เดียว
-- ใช้ข้อมูลจำลองเพื่อฝึกเท่านั้น ไม่ใช่ข้อมูลจาก NeoWork, Oracle, Hive หรือโรงงานจริง
-- ห้ามใช้ผลลัพธ์นี้ปล่อย hold, อนุมัติ release, ปิดเคส หรือสั่งการ production โดยอัตโนมัติ
-
-## วิธีใช้ Playground
-
-1. เปิด [TypeSafe Playground](https://console.typesafe.ai/)
-2. เลือกตัวอย่างที่ต้องการทดลอง
-3. วาง JSON ในส่วน **STATE** ลงในช่อง State
-4. วาง JSON ในส่วน **QUESTIONS** ลงในช่อง Questions / Prompts
-5. กด Run / Evaluate แล้วดูคำตอบตาม ID ของแต่ละ question
-
-วาง State และ Questions ในช่องตามป้ายกำกับ; ในตัวอย่าง Multi ให้เพิ่มแต่ละ question ด้วย ID ที่แสดงใน JSON [1]
-
-> หาก Playground แสดงช่องให้เพิ่ม Questions ทีละข้อ ให้เพิ่มแต่ละ object โดยใช้ชื่อ ID เป็น question ID หากหน้าจอมีช่องแยก `type`, `instructions`, `criteria` ให้ใส่ค่าแต่ละ field ให้ตรงช่อง
-
-## สรุป 3 Modes
-
-| Mode | ใช้เมื่อ | ผลลัพธ์หลัก |
-|---|---|---|
-| **Noul** | ต้องการคำตอบใช่/ไม่ใช่ | `noul`: ความน่าจะเป็นที่คำตอบคือ “ใช่” ตั้งแต่ 0–1 |
-| **Choice** | ต้องเลือกหนึ่งตัวเลือกจากรายการ | `choice`, `probabilities`, `confidence` |
-| **Score** | ต้องประเมินบนระดับที่เรียงลำดับ | `score`, `legend`, `probabilities`, `confidence` |
-
-ใช้ Noul กับแต่ละเงื่อนไข yes/no, Choice กับประเภทที่แยกเป็นตัวเลือก และ Score กับมิติที่ให้ระดับจากต่ำไปสูงได้ [2][3][4]
+1. Paste each **STATE** block into State.
+2. Paste each **QUESTIONS** block into Questions / Prompts.
+3. Select Run / Evaluate. Answers appear under each question ID.
 
 ---
 
 # Mode 1 — Noul
 
-## Noul 1 — Single: ระบุว่ามีการรายงานเหตุซ้ำหรือไม่?
-
-หนึ่ง State กับหนึ่ง Question
+## Noul 1 — Single: Does the case report a repeated event?
 
 ### STATE
 
@@ -59,11 +34,9 @@
 }
 ```
 
-**อ่านผล:** ดู `answers.event_repeated_within_24h.noul` ซึ่งประเมินว่าข้อความใน description ระบุเหตุซ้ำภายใน 24 ชั่วโมงหรือไม่ [2] นี่เป็นการอ่านข้อมูลในตัวอย่าง ไม่ใช่การยืนยันจากระบบโรงงาน
+**Result:** Check `answers.event_repeated_within_24h.noul`. It checks the text, not a factory system.
 
-## Noul 2 — Multi: ตรวจข้อมูลที่มีและข้อมูลที่ยังขาด
-
-หนึ่ง State กับหลาย Questions แบบ yes/no แยกอิสระ
+## Noul 2 — Multi: Check evidence gaps
 
 ### STATE
 
@@ -100,15 +73,13 @@
 }
 ```
 
-**อ่านผล:** ตรวจคำตอบสาม ID แยกกันว่า State ระบุ root cause, production impact และ release approval หรือไม่ [1][2] การไม่มีข้อมูลใน State ไม่ได้พิสูจน์ว่าไม่มีข้อมูลในระบบต้นทาง; มันหมายถึงข้อมูลดังกล่าวไม่ได้ให้มาในตัวอย่างนี้
+**Result:** Check root cause, production impact, and release approval separately. Missing here does not mean missing from a source system.
 
 ---
 
 # Mode 2 — Choice
 
-## Choice 1 — Single: จัดประเภทเคสจากคำอธิบาย
-
-หนึ่ง State กับหนึ่ง Question
+## Choice 1 — Single: Classify the case
 
 ### STATE
 
@@ -140,11 +111,9 @@
 }
 ```
 
-**อ่านผล:** `answers.case_type.choice` คือประเภทที่เลือก; อ่าน `probabilities` และ `confidence` ประกอบ [3] หากข้อมูลไม่พอหรือคำตอบกระจายหลายตัวเลือก ให้ตรวจหลักฐานเพิ่มเติม อย่าถือว่า Choice ยืนยันสาเหตุราก
+**Result:** Check `answers.case_type.choice`, `probabilities`, and `confidence`. This does not confirm the root cause.
 
-## Choice 2 — Multi: ประเมินขั้นตอน review และหลักฐานที่ควรตามเพิ่ม
-
-หนึ่ง State กับหลาย Questions แบบ Choice
+## Choice 2 — Multi: Choose review steps and evidence gaps
 
 ### STATE
 
@@ -207,15 +176,13 @@
 }
 ```
 
-**อ่านผล:** ดู `triage_severity.choice`, `next_review_stage.choice` และ `most_important_evidence_gap.choice` แยกกัน ตรวจ probabilities/confidence โดยเฉพาะเมื่อคำตอบไม่ชัด [3] Choice เป็นผลประเมินเพื่อช่วย review เท่านั้น ไม่ใช่คำสั่งปล่อย hold หรือเปลี่ยนสถานะ [5]
+**Result:** Review severity, next review stage, and evidence gap separately. These are not operational commands.
 
 ---
 
 # Mode 3 — Score
 
-## Score 1 — Single: ประเมินความพร้อมของข้อมูลสำหรับ RCA review
-
-หนึ่ง State กับหนึ่ง Question
+## Score 1 — Single: Is the information ready for RCA review?
 
 ### STATE
 
@@ -249,11 +216,9 @@
 }
 ```
 
-**อ่านผล:** ตรวจ `answers.rca_evidence_readiness.score`, `legend`, `probabilities` และ `confidence` [4] คะแนนนี้ประเมินความพร้อมของข้อมูลที่ให้มา ไม่ได้ยืนยันว่า RCA ถูกต้องหรืออนุมัติการปิดเคส
+**Result:** Check `answers.rca_evidence_readiness.score` and its related fields. It does not prove the RCA or approve case closure.
 
-## Score 2 — Multi: ให้คะแนนความครบถ้วนของหลักฐานคนละด้าน
-
-หนึ่ง State กับหลาย Questions แบบ Score แต่ละข้อวัดคนละมิติ
+## Score 2 — Multi: Score three evidence areas
 
 ### STATE
 
@@ -306,33 +271,10 @@
 }
 ```
 
-**อ่านผล:** เปรียบเทียบคะแนน impact, containment และ technical assessment แต่ละ `score` เป็นตำแหน่งบนสเกล ส่วน probabilities แสดงการกระจายระหว่างระดับ [4] หากคะแนนหรือ confidence ทำให้ไม่แน่ใจ ให้ตรวจหลักฐานจริงกับผู้รับผิดชอบ ไม่ใช้คะแนนแทนการอนุมัติ [5]
+**Result:** Compare impact, containment, and technical assessment. Ask a responsible person to check unclear results.
 
 ---
 
-## แบบฝึกต่อยอด
+## Try it yourself
 
-ลองเปลี่ยน State ทีละส่วน แล้วรัน Questions ชุดเดิมอีกครั้ง:
-
-- เพิ่มหลักฐานจำลองที่ยืนยันจำนวนล็อตที่ได้รับผลกระทบ แล้วดู `impact_documentation`
-- เพิ่ม engineer assessment ที่มีหลักฐานรองรับ โดยระบุชัดว่าเป็นข้อมูลสมมติ แล้วเปรียบเทียบ `rca_evidence_readiness` และ `technical_assessment`
-- เพิ่มข้อความยืนยันว่า containment ถูกตรวจสอบแล้ว แล้วดู `containment_verification`
-- เปลี่ยนคำอธิบายเคสให้ไม่มีการระบุเหตุซ้ำ แล้วตรวจว่า Noul single ประเมินข้อความอย่างไร
-
-เปลี่ยนทีละตัวแปรเพื่อดูว่า input ใดสัมพันธ์กับ judgment ใด ผลจากตัวอย่างเดียวไม่เพียงพอสำหรับสรุปความแม่นยำหรือกำหนด threshold สำหรับใช้งานจริง; การกำหนด workflow และการกระทำปลายทางควรอยู่ในการควบคุมของโค้ดและผ่านการทดสอบกับข้อมูล use case [5]
-
-## เช็กลิสต์
-
-- [ ] ตัวอย่าง Single แต่ละบทมี State หนึ่งชุดและ Question หนึ่งข้อ
-- [ ] ตัวอย่าง Multi แต่ละบทมี State หนึ่งชุดและ Questions หลายข้อ
-- [ ] Noul ถาม yes/no ทีละประเด็น; Choice เลือกจาก criteria; Score ให้ระดับเรียงลำดับ
-- [ ] อ่าน probabilities/confidence ประกอบกับคำตอบหลัก
-- [ ] ผลลัพธ์เป็นข้อมูลช่วยประเมิน ไม่ใช่การอนุมัติหรือคำสั่ง production
-
-## Sources
-
-[1] https://docs.typesafe.ai/concepts/state — State: เนื้อหาที่ประเมิน, หนึ่ง State ต่อหนึ่งหรือหลาย Questions และคำถามถูกประเมินแยกกัน
-[2] https://docs.typesafe.ai/primitives/noul — Noul: yes/no, criteria และการแยกคำถามหลายข้อ
-[3] https://docs.typesafe.ai/primitives/choice — Choice: ตัวเลือกที่กำหนด, probabilities และ confidence
-[4] https://docs.typesafe.ai/primitives/score — Score: ระดับเรียงลำดับ, score, legend, probabilities และ confidence
-[5] https://docs.typesafe.ai/concepts/how-to-build-with-system-one — แยกคำถามให้แคบและให้โค้ดคุม workflow/side effects
+Change one State detail at a time: add sample impact evidence, an engineer assessment, or containment verification. Then run the same Questions. Use synthetic data only; people and application code must control real actions.

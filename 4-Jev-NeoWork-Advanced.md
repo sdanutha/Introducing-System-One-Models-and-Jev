@@ -6,9 +6,9 @@ This is fictional training data, not real NeoWork or factory data. Never use the
 
 ## How to use the Playground
 
-1. Open the [TypeSafe Playground](https://console.typesafe.ai/).
-2. Paste **STATE** into State and **QUESTIONS** into Questions / Prompts. If the Playground asks for one question at a time, add each question by its ID.
-3. Select Run / Evaluate. Find each answer by its question ID.
+1. Paste each **STATE** block into State.
+2. Paste each **QUESTIONS** block into Questions / Prompts.
+3. Select Run / Evaluate. Answers appear under each question ID.
 
 ## STATE
 
